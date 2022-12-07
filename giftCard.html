@@ -1,144 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta name="description" content="Számold ki egyszerűen - mennyit spórolhatsz!">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Molnár István || Мельник Степан">
-    <meta name="keywords" content="gift,card,calculator,save,money">
-    <meta name="theme-color" content="#050">
-    <title>Ajándékutalvány számológép</title>
-    <style rel="stylesheet" type="text/css">
-      /* base style */
-      *{
-        box-sizing:border-box;
-        margin:0 auto;
-        font-family:"times new roman";
-        font-size:16px;
-      }
-      body{
-        background:#000;
-        color:#ffab;
-        overflow:hidden auto;
-      }
-      .clearfix{
-        content:"";
-        display:table;
-        clear:both;
-      }
-      
-      /* targeted styles */
-      img#qr{
-        display:block;
-        width:32px;
-        height:32px;
-        margin-left:calc(100% - 32px - 8px);
-        margin-top:8px;
-        object-fit:contain;
-        transition:.2s linear all;
-        border-radius:4px;
-      }
-      img#main{
-        width:128px;
-        display:block;
-      }
-      h2{
-        display:block;
-        text-align:center;
-        font-size:2rem;
-      }
-      form {
-        width:90%;
-        display:block;
-        position:relative;
-      }
-      form::before{
-        content:"";
-        width:100%;
-        height:100%;
-        top:0;
-        left:0;
-        z-index:99;
-        position:absolute;
-      }
-      form > *{
-        
-      }
-      label, input{
-        float:left;
-        width:50%;
-      }
-      label{
-        text-align:center;
-      }
-      input{
-        text-indent:4px;
-        border-radius:4px;
-      }
-      div{
-        width:100px;
-        height:100px;
-        margin:10px auto;
-        background:conic-gradient(yellow 1%, blue 3%);
-        border-radius:50%;
-      }
-      
-      
-      
-      section{
-        position:fixed;
-        bottom:0;
-        left:0;
-        width:100%;
-      }
-      section > *{
-        float:left;
-        width:calc(100% / 3 - 8px);
-        margin-left:calc(8px * 3 / 4);
-        margin-bottom:8px;
-        border:1px outset #090;
-        height:48px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        text-align:center;
-        background:#020;
-        font-size:2rem;
-        border-radius:4px;
-      }
-      
-    </style>
-  </head>
-  <body id="main">
-    <img id="qr" src="https://molnaristvan95.github.io/sikotes/hersi_qr.png" alt="share by qr code">
-    <img id="main" src="https://www.hervis.hu/shop/assets/icons/hervis.svg" alt="image Hervis logo">
-    <h2>Mennyit takaríthatsz meg?</h2>
-    <form class="clearfix">
-      <label for="amount">Vásárlás értéke (Ft.) :</label>
-      <input id="amount" type="number" min="0" max="999999" placeholder="Pontos összeg">
-      <label for="pieces">Utalványok száma (6000 Ft) :</label>
-      <input id="pieces" type="number" placeholder="Darab">
-      <label for="payment">Fennmaradó fizetendő összeg (K.p. || B.k.):</label>
-      <input id="payment" type="number" placeholder="Kp || b.kártya">
-      <label for="saving">Megtakarítás (Ft) :</label>
-      <input id="saving" type="number" placeholder="A cég ajándéka">
-      <label for="percent">Százalékban (%) :</label>
-      <input id="percent" type="number" placeholder="Diagram">
-    </form>
-    <div id="illustration"></div>
-    <section id="numPad" class="clearfix"></section>
-      
-    <script type="text/javascript">
-      // varisables n dynamic_functions
-      const idF = (nn) => {
+<!-- 2022.12.07. 04:38 -->
+
+<head>
+  <meta name="description" content="Számold ki egyszerűen - mennyit spórolhatsz!">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Molnár István || Мельник Степан">
+  <meta name="keywords" content="gift,card,calculator,save,money">
+  <meta name="theme-color" content="#050">
+  <title>Ajándékutalvány számológép</title>
+  <style rel="stylesheet" type="text/css">
+    /* base style */
+    * {
+      box-sizing: border-box;
+      margin: 0 auto;
+      font-family: "times new roman";
+      font-size: 16px;
+    }
+
+    body {
+      background: #000;
+      color: #ffab;
+      overflow: hidden auto;
+    }
+
+    .clearfix {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    /* targeted styles */
+    img#qr {
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin-left: calc(100% - 32px - 8px);
+      margin-top: 8px;
+      object-fit: contain;
+      transition: .2s linear all;
+      border-radius: 4px;
+    }
+
+    img#main {
+      width: 98px;
+      display: block;
+    }
+
+    h2 {
+      display: block;
+      text-align: center;
+      font-size: 2rem;
+      margin: 10px auto;
+    }
+
+    form {
+      width: 90%;
+      display: block;
+      position: relative;
+      margin: 20px auto;
+    }
+
+    form::before {
+      content: "";
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 99;
+      position: absolute;
+    }
+
+    form>* {}
+
+    label,
+    input {
+      float: left;
+      width: 50%;
+    }
+
+    label {
+      text-align: center;
+      font-size: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    input {
+      text-indent: 4px;
+      border-radius: 4px;
+    }
+
+    div {
+      width: 100px;
+      height: 100px;
+      margin: 30px auto;
+      background: conic-gradient(yellow 1%, blue 3%);
+      border-radius: 50%;
+    }
+
+    section {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
+
+    section>* {
+      float: left;
+      width: calc(100% / 3 - 8px);
+      margin-left: calc(8px * 3 / 4);
+      margin-bottom: 8px;
+      border: 1px outset #090;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: #020;
+      font-size: 2rem;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body id="main">
+  <img id="qr" src="https://molnaristvan95.github.io/saveCash/qrGiftCard.png" alt="share by qr code">
+  <img id="main" src="https://www.hervis.hu/shop/assets/icons/hervis.svg" alt="image Hervis logo">
+  <h2>Mennyit takaríthatsz meg?</h2>
+  <form class="clearfix">
+    <label for="amount">Vásárlás értéke (Ft.) :</label>
+    <input id="amount" type="number" min="0" max="999999" placeholder="Pontos összeg">
+    <label for="pieces">Utalványok száma (6000 Ft) :</label>
+    <input id="pieces" type="number" placeholder="Darab">
+    <label for="payment">Fennmaradó fizetendő összeg (K.p. || B.k.):</label>
+    <input id="payment" type="number" placeholder="Kp || b.kártya">
+    <label for="saving">Megtakarítás (Ft) :</label>
+    <input id="saving" type="number" placeholder="A cég ajándéka">
+    <label for="percent">Százalékban (%) :</label>
+    <input id="percent" type="number" placeholder="Diagram">
+  </form>
+  <div id="illustration"></div>
+  <section id="numPad" class="clearfix"></section>
+
+  <script type="text/javascript">
+    // varisables n dynamic_functions
+    const idF = (nn) => {
         return document.getElementById(nn);
       },
-            genEF = (e) => {
-              return document.createElement(e);
-            };
-      
-      // functions
-      let generateButtons = () => {
+      genEF = (e) => {
+        return document.createElement(e);
+      };
+
+    // functions
+    let generateButtons = () => {
         for (let a = 0; a <= 11; a++) {
           let btns = genEF('SPAN');
           if (a == 10) {
@@ -166,13 +183,14 @@
           }
           idF('numPad').appendChild(btns);
         }
-      }, calculate = () => {
+      },
+      calculate = () => {
         if (idF('amount').value.length > 0) {
           let divide = idF('amount').value / 6000,
-              str = divide.toString(),
-              index = str.indexOf('.'),
-              round = str.substring(0,index),
-              tens = (idF('amount').value - (6000 * round));
+            str = divide.toString(),
+            index = str.indexOf('.'),
+            round = str.substring(0, index),
+            tens = (idF('amount').value - (6000 * round));
           idF('pieces').value = round;
           idF('payment').value = tens;
           idF('saving').value = round * 1000;
@@ -181,32 +199,43 @@
         } else {
           document.getElementsByTagName('FORM')[0].reset();
         }
-      };
-      
-      idF('qr').addEventListener('click', () => {
-        let q = idF('qr');
-        if (q.offsetWidth < 100) {
-          if (screen.width > screen.height) {
-            q.style.height = '100vh';
-            q.style.width = 'auto';
-          } else {
-            q.style.width = '100%';
-            q.style.height = 'auto';
-          }
-          q.style.margin = '0 auto';
-          idF('numPad').style.display = 'none';
-        } else {
-          q.style.width = '32px';
-          q.style.height = '32px';
-          q.style.margin = '8px 0 0 calc(100% - 32px - 8px)';
-          idF('numPad').style.display = 'block';
+      },
+      labels = () => {
+        let labs = document.getElementsByTagName('LABEL'),
+          len = labs.length,
+          inp = document.getElementsByTagName('INPUT'),
+          hei = inp[0].offsetHeight;
+        for (let x = 0; x < len; x++) {
+          labs[x].style.height = hei + 'px';
+          labs[x].style.clear = 'left';
         }
-      });
-      
-      //callback
-      generateButtons();
-      window.setInterval(calculate, 256);
-      
-    </script>
-  </body>
+      };
+
+    idF('qr').addEventListener('click', () => {
+      let q = idF('qr');
+      if (q.offsetWidth < 100) {
+        if (screen.width > screen.height) {
+          q.style.height = '100vh';
+          q.style.width = 'auto';
+        } else {
+          q.style.width = '100%';
+          q.style.height = 'auto';
+        }
+        q.style.margin = '0 auto';
+        idF('numPad').style.display = 'none';
+      } else {
+        q.style.width = '32px';
+        q.style.height = '32px';
+        q.style.margin = '8px 0 0 calc(100% - 32px - 8px)';
+        idF('numPad').style.display = 'block';
+      }
+    });
+
+    //callback
+    generateButtons();
+    window.setInterval(calculate, 256);
+    labels();
+  </script>
+</body>
+
 </html>
