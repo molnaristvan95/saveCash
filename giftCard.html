@@ -37,7 +37,7 @@
       width: 32px;
       height: 32px;
       margin-left: calc(100% - 32px - 8px);
-      margin-top: 8px;
+      margin-to: 8px;
       object-fit: contain;
       transition: .2s linear all;
       border-radius: 4px;
@@ -51,15 +51,15 @@
     h2 {
       display: block;
       text-align: center;
-      font-size: 2rem;
-      margin: 10px auto;
+      font-size: 1.5rem;
+      margi: 10px auto;
     }
 
     form {
-      width: 90%;
+      width: 95%;
       display: block;
       position: relative;
-      margin: 20px auto;
+      margi: 20px auto;
     }
 
     form::before {
@@ -77,28 +77,101 @@
     label,
     input {
       float: left;
-      width: 50%;
     }
 
     label {
+      width: 60%;
       text-align: center;
-      font-size: 8px;
+      font-size: 15px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
+    label[for="payment"] {
+      font-size: 10px;
+    }
+
     input {
+      width: 40%;
       text-indent: 4px;
       border-radius: 4px;
+      background: #333;
+      color: orange;
+      letter-spacing: 3px;
+    }
+
+    input::placeholder {
+      font-size: 12px;
+      letter-spacing: .7px;
     }
 
     div {
       width: 100px;
       height: 100px;
-      margin: 30px auto;
-      background: conic-gradient(yellow 1%, blue 3%);
+      margin: 8px auto;
+      background: conic-gradient(#333 1%, #111 3%);
       border-radius: 50%;
+      transition: 1s linear all;
+      position: relative;
+      box-shadow: 2px 2px 4px 0 orange;
+    }
+
+    div:hover {
+      filter: hue-rotate(180deg);
+    }
+
+    div::before,
+    div::after {
+      content: 'Megtakarítás';
+      color: skyblue;
+      position: absolute;
+      left: 105%;
+      top: 15px;
+    }
+
+    div::after {
+      content: 'Fizetendő';
+      color: green;
+      top: 35px;
+    }
+
+    article#isMax {
+      height: 12px;
+      width: 95%;
+      border: 1px outset #f90;
+      margin-top: 10px;
+      display: block;
+      position: relative;
+    }
+
+    #isMax::before {
+      content: '32%';
+      position: absolute;
+      top: -150%;
+      left: 2.5%;
+      color: #ffab;
+      font-size: 12px;
+    }
+
+    #loading {
+      position: absolute;
+      height: 50%;
+      top: 25%;
+      width: 98%;
+      left: .5%;
+      background: yellow;
+      overflow: hidden;
+    }
+
+    form,
+    h2,
+    img {
+      margin: 8px auto;
+    }
+
+    #main {
+      margin-top: 0;
     }
 
     section {
@@ -123,7 +196,22 @@
       font-size: 2rem;
       border-radius: 4px;
     }
+
+    .buttons {
+      animation: .4s ease-in pulse 1;
+    }
+
+    @keyframes pulse {
+      0% {
+        background: #0f0;
+      }
+
+      100% {
+        background: #000;
+      }
+    }
   </style>
+  <style id="internal" rel="stylesheet" type="text/css"></style>
 </head>
 
 <body id="main">
@@ -131,18 +219,27 @@
   <img id="main" src="https://www.hervis.hu/shop/assets/icons/hervis.svg" alt="image Hervis logo">
   <h2>Mennyit takaríthatsz meg?</h2>
   <form class="clearfix">
-    <label for="amount">Vásárlás értéke (Ft.) :</label>
+    <label for="amount">Teljes összeg (Ft):</label>
     <input id="amount" type="number" min="0" max="999999" placeholder="Pontos összeg">
-    <label for="pieces">Utalványok száma (6000 Ft) :</label>
+    <label for="pieces">Hányszor (6000 Ft):</label>
     <input id="pieces" type="number" placeholder="Darab">
-    <label for="payment">Fennmaradó fizetendő összeg (K.p. || B.k.):</label>
-    <input id="payment" type="number" placeholder="Kp || b.kártya">
-    <label for="saving">Megtakarítás (Ft) :</label>
+    <label for="saving">Megtakarítás (Ft):</label>
     <input id="saving" type="number" placeholder="A cég ajándéka">
-    <label for="percent">Százalékban (%) :</label>
+    <label for="cards">Kasszában fiz. utalv:</label>
+    <input id="cards" type="number" placeholder="Megvásárolandó">
+    <label for="absolute">Utalv. összesen:</label>
+    <input id="absolute" type="number" placeholder="Ennyi lesz a kártyán">
+    <label for="payment">Fennmaradó fizetendő összeg (Kp | Bk):</label>
+    <input id="payment" type="number" placeholder="Kp || b.kártya">
+    <label for="total">Végösszeg:</label>
+    <input id="total" type="number" placeholder="Nettó fizetendő">
+    <label for="percent">Ajándék százalékban (%):</label>
     <input id="percent" type="number" placeholder="Diagram">
   </form>
   <div id="illustration"></div>
+  <article id="isMax">
+    <article id="loading"></article>
+  </article>
   <section id="numPad" class="clearfix"></section>
 
   <script type="text/javascript">
@@ -163,22 +260,38 @@
             btns.addEventListener('click', () => {
               let amVal = idF('amount').value.substring(0, (idF('amount').value.length - 1));
               idF('amount').value = amVal;
+              btns.classList.add('buttons');
+              window.setTimeout(() => {
+                btns.classList.remove('buttons');
+              }, 512);
             });
           } else if (a == 11) {
             btns.innerText = 'C';
             btns.addEventListener('click', () => {
               idF('amount').value = '';
+              btns.classList.add('buttons');
+              window.setTimeout(() => {
+                btns.classList.remove('buttons');
+              }, 512);
             });
           } else if (a == 9) {
             btns.innerText = '0';
             btns.addEventListener('click', () => {
               idF('amount').value += '0';
+              btns.classList.add('buttons');
+              window.setTimeout(() => {
+                btns.classList.remove('buttons');
+              }, 512);
             });
           } else {
             btns.innerText = eval(a + 1);
             btns.addEventListener('click', () => {
               let correct = btns.innerText;
               idF('amount').value += correct;
+              btns.classList.add('buttons');
+              window.setTimeout(() => {
+                btns.classList.remove('buttons');
+              }, 512);
             });
           }
           idF('numPad').appendChild(btns);
@@ -194,8 +307,14 @@
           idF('pieces').value = round;
           idF('payment').value = tens;
           idF('saving').value = round * 1000;
-          idF('percent').value = ((round * 1000) / (idF('amount').value / 100));
-          idF('illustration').style.background = 'conic-gradient(skyblue ' + ((round * 1000) / (idF('amount').value / 100)) + '%, #050 ' + ((round * 1000) / (idF('amount').value / 100)) + '%)';
+          idF('cards').value = round * 5000;
+          idF('absolute').value = (round * 1000) + (round * 5000);
+          idF('total').value = (round * 5000) + tens;
+          idF('percent').value = (100 - (((round * 5000) + tens) / (idF('amount').value / 100))).toPrecision(5);
+          let matek = (100 - (((round * 5000) + tens) / (idF('amount').value / 100))).toPrecision(5);
+          idF('illustration').style.background = 'conic-gradient(skyblue ' + matek + '%, #050 ' + matek + '%)';
+          idF('loading').style.width = ((matek - 8.332) / (8.332 / 100)) + '%';
+          idF('internal').innerHTML = '#isMax::before{ content:" Kihasználva: ' + (((matek - 8.332) / (8.332 / 100)).toPrecision(3) + '%') + ' "; }';
         } else {
           document.getElementsByTagName('FORM')[0].reset();
         }
