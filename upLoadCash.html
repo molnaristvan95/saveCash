@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content="">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Molnár István || Мельник Степан">
+    <meta name="keywords" content="">
+    <meta name="theme-color" content="#050">
+    <title></title>
+    <style rel="stylesheet" type="text/css">
+      *{
+        box-sizing:border-box;
+        margin:32px auto;
+        font-size:16px;
+        font-size:1.3rem;
+        text-align:center;
+      }
+      body{
+        background:#000;
+        color:#ffab;
+        overflow:hidden hidden; 
+      }
+      body > *:not(script){
+        display:block;
+      }
+      label{
+        margin-top:-32px !important;
+      }
+      div::before{
+        content:"teljes összeg : ";
+        letter-spacing:.5px !important;
+        display:block;
+      }
+      div,input{
+        letter-spacing:10px;
+      }
+      input{
+        background:#555;
+        color:#ffab;
+        border-radius:4px;
+      }
+      :focus{
+        outline:2px outset #f90;
+      }
+    </style>
+  </head>
+  <body id="main">
+    <label>feltöltendő összeg : </label>
+    <input id="amount" type="number" value="" max="999999" placeholdre="Ft">
+    <div id="equal"></div>
+    <var id="vv"></var>
+    <p id="multi"></p>
+    <script type="text/javascript">
+      
+      const idF = (nn) => {
+        return document.getElementById(nn);
+      };
+      
+      window.setInterval(() => {
+        let val = idF('amount').value / 5000,
+            str = val.toString(),
+            sub,
+            eq;
+        if (str.includes('.')) {
+          sub = str.substring(0, str.indexOf('.'));
+        } else {
+          sub = idF('amount').value / 5000;
+        }
+        eq = sub * 1000 + parseFloat(idF('amount').value);
+        idF('equal').innerText = eq;
+        idF('multi').innerText = sub + ' × 1000 Ft.';
+      }, 128);
+      
+      window.setTimeout(() => {
+        idF('amount').focus();
+      }, 128);
+    </script>
+  </body>
+</html>
