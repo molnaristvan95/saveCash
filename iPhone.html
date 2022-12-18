@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 2022.12.07. 04:38 -->
+
+<head>
+  <meta name="description" content="Számold ki egyszerűen - mennyit spórolhatsz!">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Molnár István || Мельник Степан">
+  <meta name="keywords" content="gift,card,calculator,save,money">
+  <meta name="theme-color" content="#050">
+  <title>Ajándékutalvány számológép</title>
+  <style rel="stylesheet" type="text/css">
+    /* base style */
+    :root{
+      --formBeforeDisplay:block;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0 auto;
+      font-family: "times new roman";
+      font-size: 16px;
+    }
+
+    body {
+      background: #000;
+      color: #ffab;
+      overflow: hidden auto;
+    }
+
+    .clearfix {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    /* targeted styles */
+    img#qr {
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin-left: calc(100% - 32px - 8px);
+      margin-to: 8px;
+      object-fit: contain;
+      transition: .2s linear all;
+      border-radius: 4px;
+    }
+
+    img#main {
+      width: 98px;
+      display: block;
+    }
+
+    h2 {
+      display: block;
+      text-align: center;
+      font-size: 1.5rem;
+      margi: 10px auto;
+    }
+
+    form {
+      width: 95%;
+      display: block;
+      position: relative;
+      margi: 20px auto;
+    }
+
+    form::before {
+      content: "";
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 99;
+      position: absolute;
+      display:var(--formBeforeDisplay);
+    }
+
+    form>* {}
+
+    label,
+    input {
+      float: left;
+    }
+
+    label {
+      width: 60%;
+      text-align: center;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    label[for="payment"] {
+      font-size: 10px;
+    }
+
+    input {
+      width: 40%;
+      text-indent: 4px;
+      border-radius: 4px;
+      background: #333;
+      color: orange;
+      letter-spacing: 3px;
+    }
+
+    input::placeholder {
+      font-size: 12px;
+      letter-spacing: .7px;
+    }
+
+    div {
+      width: 100px;
+      height: 100px;
+      margin: 8px auto;
+      background: conic-gradient(#333 1%, #111 3%);
+      border-radius: 50%;
+      transition: 1s linear all;
+      position: relative;
+      box-shadow: 2px 2px 4px 0 orange;
+    }
+
+    div:hover {
+      filter: hue-rotate(180deg);
+    }
+
+    div::before,
+    div::after {
+      content: 'Megtakarítás';
+      color: skyblue;
+      position: absolute;
+      left: 105%;
+      top: 15px;
+    }
+
+    div::after {
+      content: 'Fizetendő';
+      color: green;
+      top: 35px;
+    }
+
+    article#isMax {
+      height: 12px;
+      width: 95%;
+      border: 1px outset #f90;
+      margin-top: 10px;
+      display: block;
+      position: relative;
+    }
+
+    #isMax::before {
+      content: '32%';
+      position: absolute;
+      top: -150%;
+      left: 2.5%;
+      color: #ffab;
+      font-size: 12px;
+    }
+
+    #loading {
+      position: absolute;
+      height: 50%;
+      top: 25%;
+      width: 98%;
+      left: .5%;
+      background: yellow;
+      overflow: hidden;
+    }
+
+    form,
+    h2,
+    img {
+      margin: 8px auto;
+    }
+
+    #main {
+      margin-top: 0;
+    }
+
+    section {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
+
+    section>* {
+      float: left;
+      width: calc(100% / 3 - 8px);
+      margin-left: calc(8px * 3 / 4);
+      margin-bottom: 8px;
+      border: 1px outset #090;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: #020;
+      font-size: 2rem;
+      border-radius: 4px;
+    }
+
+    .buttons {
+      animation: .4s ease-in pulse 1;
+    }
+
+    @keyframes pulse {
+      0% {
+        background: #0f0;
+      }
+
+      100% {
+        background: #000;
+      }
+    }
+    #labIos, #ios{
+      float:none;
+      position:absolute;
+      top:4px;
+      left:4px;
+      margin:0;
+      text-indent:0;
+      letter-spacing:0;
+      width:auto;
+    }
+    #labIos{
+      
+    }
+    #ios{
+      zoom:2;
+      width:8px;
+      left:32px;
+      top:0;
+      filter:invert(1);
+    }
+    
+  </style>
+  <style id="internal" rel="stylesheet" type="text/css"></style>
+</head>
+
+<body id="main">
+  <label id="labIos" for="ios">iPhone : </label>
+  <input id="ios" type="checkbox">
+  <img id="qr" src="https://molnaristvan95.github.io/saveCash/qrGiftCard.png" alt="share by qr code">
+  <img id="main" src="https://www.hervis.hu/shop/assets/icons/hervis.svg" alt="image Hervis logo">
+  <h2>Mennyit takaríthatsz meg?</h2>
+  <form class="clearfix">
+    <label for="amount">Teljes összeg (Ft):</label>
+    <input id="amount" type="number" min="0" max="999999" placeholder="Pontos összeg">
+    <label for="pieces">Hányszor (6000 Ft):</label>
+    <input id="pieces" type="number" placeholder="Darab">
+    <label for="saving">Megtakarítás (Ft):</label>
+    <input id="saving" type="number" placeholder="A cég ajándéka">
+    <label for="cards">Kasszában fiz. utalv:</label>
+    <input id="cards" type="number" placeholder="Megvásárolandó">
+    <label for="absolute">Utalv. összesen:</label>
+    <input id="absolute" type="number" placeholder="Ennyi lesz a kártyán">
+    <label for="payment">Fennmaradó fizetendő összeg (Kp | Bk):</label>
+    <input id="payment" type="number" placeholder="Kp || b.kártya">
+    <label for="total">Végösszeg:</label>
+    <input id="total" type="number" placeholder="Nettó fizetendő">
+    <label for="percent">Ajándék százalékban (%):</label>
+    <input id="percent" type="number" placeholder="Diagram">
+  </form>
+  <div id="illustration"></div>
+  <article id="isMax">
+    <article id="loading"></article>
+  </article>
+  <section id="numPad" class="clearfix"></section>
+
+  <script type="text/javascript">
+    // varisables n dynamic_functions
+    const idF = (nn) => {
+        return document.getElementById(nn);
+      },
+      genEF = (e) => {
+        return document.createElement(e);
+      };
+
+    // functions
+    let generateButtons = () => {
+        for (let a = 0; a <= 11; a++) {
+          let btns = genEF('SPAN');
+          if (a == 10) {
+            btns.innerText = '←';
+            btns.addEventListener('click', () => {
+              let amVal = idF('amount').value.substring(0, (idF('amount').value.length - 1));
+              idF('amount').value = amVal;
+              btns.classList.add('buttons');
+              window.setTimeout(() => {
+                btns.classList.remove('buttons');
+              }, 512);
+            });
+          } else if (a == 11) {
+            btns.innerText = 'C';
+            btns.addEventListener('click', () => {
+              idF('amount').value = '';
+              btns.classList.add('buttons');
+              window.setTimeout(() => {
+                btns.classList.remove('buttons');
+              }, 512);
+            });
+          } else if (a == 9) {
+            btns.innerText = '0';
+            btns.addEventListener('click', () => {
+              idF('amount').value += '0';
+              btns.classList.add('buttons');
+              window.setTimeout(() => {
+                btns.classList.remove('buttons');
+              }, 512);
+            });
+          } else {
+            btns.innerText = eval(a + 1);
+            btns.addEventListener('click', () => {
+              let correct = btns.innerText;
+              idF('amount').value += correct;
+              btns.classList.add('buttons');
+              window.setTimeout(() => {
+                btns.classList.remove('buttons');
+              }, 512);
+            });
+          }
+          idF('numPad').appendChild(btns);
+        }
+      },
+      calculate = () => {
+        if (idF('amount').value.length > 0) {
+          let divide = idF('amount').value / 6000,
+            str = divide.toString(),
+            index = str.indexOf('.'),
+            round = str.substring(0, index),
+            tens = (idF('amount').value - (6000 * round));
+          idF('pieces').value = round;
+          idF('payment').value = tens;
+          idF('saving').value = round * 1000;
+          idF('cards').value = round * 5000;
+          idF('absolute').value = (round * 1000) + (round * 5000);
+          idF('total').value = (round * 5000) + tens;
+          idF('percent').value = (100 - (((round * 5000) + tens) / (idF('amount').value / 100))).toPrecision(5);
+          let matek = (100 - (((round * 5000) + tens) / (idF('amount').value / 100))).toPrecision(5);
+          idF('illustration').style.background = 'conic-gradient(skyblue ' + matek + '%, #050 ' + matek + '%)';
+          idF('loading').style.width = ((matek - 8.332) / (8.332 / 100)) + '%';
+          idF('internal').innerHTML = '#isMax::before{ content:" Kihasználva: ' + (((matek - 8.332) / (8.332 / 100)).toPrecision(3) + '%') + ' "; }';
+        } else {
+          document.getElementsByTagName('FORM')[0].reset();
+        }
+      },
+      labels = () => {
+        let labs = document.getElementsByTagName('LABEL'),
+          len = labs.length,
+          inp = document.getElementsByTagName('INPUT'),
+          hei = inp[0].offsetHeight;
+        for (let x = 0; x < len; x++) {
+          labs[x].style.height = hei + 'px';
+          labs[x].style.clear = 'left';
+        }
+      };
+
+    idF('qr').addEventListener('click', () => {
+      let q = idF('qr');
+      if (q.offsetWidth < 100) {
+        if (screen.width > screen.height) {
+          q.style.height = '100vh';
+          q.style.width = 'auto';
+        } else {
+          q.style.width = '100%';
+          q.style.height = 'auto';
+        }
+        q.style.margin = '0 auto';
+        idF('numPad').style.display = 'none';
+      } else {
+        q.style.width = '32px';
+        q.style.height = '32px';
+        q.style.margin = '8px 0 0 calc(100% - 32px - 8px)';
+        idF('numPad').style.display = 'block';
+      }
+    });
+    
+    window.setInterval(() => {
+      if (idF('ios').checked === true) {
+        idF('numPad').style.display = 'none';
+        document.documentElement.style.setProperty('--formBeforeDisplay', 'none');
+        idF('pieces').disabled = true;
+        idF('saving').disabled = true;
+        idF('cards').disabled = true;
+        idF('absolute').disabled = true;
+        idF('payment').disabled = true;
+        idF('total').disabled = true;
+        idF('percent').disabled = true;
+        
+      } else {
+        idF('numPad').style.display = 'block';
+        document.documentElement.style.setProperty('--formBeforeDisplay', 'block');
+        idF('pieces').disabled = false;
+        idF('saving').disabled = false;
+        idF('cards').disabled = false;
+        idF('absolute').disabled = false;
+        idF('payment').disabled = false;
+        idF('total').disabled = false;
+        idF('percent').disabled = false;
+      }
+    }, 256);
+
+    //callback
+    generateButtons();
+    window.setInterval(calculate, 256);
+    labels();
+  </script>
+</body>
+
+</html>
