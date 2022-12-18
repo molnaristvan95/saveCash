@@ -402,10 +402,18 @@
       }
     }, 256);
 
+let beTrue = () => { 
+idF('ios').checked = true;
+}
+
     //callback
     generateButtons();
     window.setInterval(calculate, 256);
     labels();
+window.setTimeout( () => {
+beTrue();
+}, 512 );
+
   </script>
 </body>
 
